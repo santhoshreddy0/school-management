@@ -178,6 +178,7 @@ module.exports = class ApiHandler {
             return this.managers.responseDispatcher.dispatch(res, {
               ok: false,
               errors: result.errors,
+              code: result.code,
             });
           } else if (result.error) {
             return this.managers.responseDispatcher.dispatch(res, {

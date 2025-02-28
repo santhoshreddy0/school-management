@@ -7,16 +7,20 @@ module.exports = class User {
     this.mongomodels = mongomodels;
     this.tokenManager = managers.token;
     this.usersCollection = "users";
-    this.httpExposed = ["post=createUser"];
+    this.httpExposed = ["post=createUser", "loginUser", "updateProfile"];
     this.managers = managers;
   }
 
-  async createUser({ name, email, password, res }) {
+  async createUser({ name, email, password }) {
     try {
       // validate the user
       let user = { name, email, password };
       let result = await this.validators.user.createUser(user);
-      if (result) return result;
+      if (result)
+        return {
+          errors: result,
+          code: 422,
+        };
 
       // create the user
 
@@ -29,7 +33,7 @@ module.exports = class User {
         };
       }
       let defaultRole = await this.mongomodels.Role.findOne({
-        name: "sk",
+        name: "student",
       });
       console.log("default role ", defaultRole);
 
@@ -58,6 +62,104 @@ module.exports = class User {
       };
     } catch (error) {
       console.error("error creating user", error);
+
+      return {
+        error: "Something went wrong!",
+        code: 500,
+      };
+    }
+  }
+
+  async loginUser({ email, password }) {
+    try {
+      // validate the user
+      let user = { email, password };
+      let result = await this.validators.user.loginUser(user);
+      if (result)
+        return {
+          errors: result,
+          code: 422,
+        };
+
+      // check for existing email
+      const existingUser = await this.mongomodels.User.findOne({ email });
+      if (!existingUser) {
+        return {
+          error: "User does not exist",
+          code: 422,
+        };
+      }
+
+      // check for password
+      const isPasswordCorrect = await bcrypt.compare(
+        user.password,
+        existingUser.password
+      );
+      if (!isPasswordCorrect) {
+        return {
+          error: "Invalid password",
+          code: 422,
+        };
+      }
+
+      let longToken = this.tokenManager.genLongToken({
+        userId: existingUser._id,
+        userKey: existingUser.key,
+      });
+
+      // Response
+      return {
+        user: {
+          name: existingUser.name,
+          email: existingUser.email,
+        },
+        longToken,
+      };
+    } catch (error) {
+      console.error("error logging in user", error);
+
+      return {
+        error: "Something went wrong!",
+        code: 500,
+      };
+    }
+  }
+
+  async updateProfile({ name, password, __shortToken }) {
+    try {
+      // validate the user
+      let user = { name, password };
+      let result = await this.validators.user.updateProfile(user);
+      if (result)
+        return {
+          errors: result,
+          code: 422,
+        };
+      const decoded = __shortToken;
+
+      const existingUser = await this.mongomodels.User.findOne({
+        _id: decoded.userId,
+      });
+      if (!existingUser) {
+        return {
+          error: "User does not exist",
+          code: 422,
+        };
+      }
+      existingUser.name = name || existingUser.name;
+      let hashedPassword = password
+        ? await this.hashPassword(password)
+        : existingUser.password;
+      existingUser.password = hashedPassword;
+      const updatedUser = await existingUser.save();
+      return {
+        user: {
+          name: updatedUser.name,
+          email: updatedUser.email,
+        },
+      };
+    } catch (error) {
+      console.error("error updating user", error);
 
       return {
         error: "Something went wrong!",
