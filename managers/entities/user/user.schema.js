@@ -3,7 +3,7 @@
 module.exports = {
     createUser: [
         {
-            model: 'username',
+            model: 'email',
             required: true,
         },
     ],

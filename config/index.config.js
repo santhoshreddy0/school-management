@@ -47,6 +47,4 @@ config.dotEnv = {
     SHORT_TOKEN_SECRET,
 };
 
-
-
 module.exports = config;

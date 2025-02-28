@@ -22,6 +22,8 @@ module.exports = class ValidatorsLoader {
         const schemes = loader('./managers/**/*.schema.js');
 
         Object.keys(schemes).forEach(sk=>{
+            console.log("sk", sk);
+            
             let pine = new Pine({models: this.models, customValidators: this.customValidators});
             validators[sk] = {};
             Object.keys(schemes[sk]).forEach(s=>{
