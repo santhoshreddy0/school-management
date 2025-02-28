@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 const slugify = (text) => {
   const from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
   const to = "aaaaaeeeeeiiiiooooouuuunc------";
@@ -135,6 +137,12 @@ const isChance = (max) => {
   return min == value;
 };
 
+const hashPassword = async (password) => {
+  const saltRounds = 5; // The cost factor (higher = more secure but slower)
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
+};
+
 module.exports = {
   slugify,
   getDeepValue,
@@ -148,4 +156,5 @@ module.exports = {
   hrTime,
   match,
   isChance,
+  hashPassword,
 };

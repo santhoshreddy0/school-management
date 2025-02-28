@@ -6,16 +6,16 @@ const SchoolAdminMappingSchema = new Schema(
   {
     school_id: {
       type: Schema.Types.ObjectId,
-      ref: "School",
+      ref: "schools",
       required: true,
     },
     user_id: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("SchoolAdminMapping", SchoolAdminMappingSchema);
+module.exports = model("schooladminmappings", SchoolAdminMappingSchema);

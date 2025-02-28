@@ -17,4 +17,4 @@ const PermissionSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = model("Permission", PermissionSchema);
+module.exports = model("permissions", PermissionSchema);

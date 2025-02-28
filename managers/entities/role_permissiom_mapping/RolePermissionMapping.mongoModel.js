@@ -6,16 +6,16 @@ const RolePermissionMappingSchema = new Schema(
   {
     role_id: {
       type: Schema.Types.ObjectId,
-      ref: "Role",
+      ref: "roles",
       required: true,
     },
     permission_id: {
       type: Schema.Types.ObjectId,
-      ref: "Permission",
+      ref: "permissions",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("RolePermissionMapping", RolePermissionMappingSchema);
+module.exports = model("rolepermissionmappings", RolePermissionMappingSchema);

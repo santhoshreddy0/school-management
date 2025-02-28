@@ -18,7 +18,7 @@ const UserSchema = new Schema({
   },
   role: {
     type: Schema.Types.ObjectId,
-    ref: "Role",
+    ref: "roles",
     required: true,
   },
   active: {
@@ -31,4 +31,4 @@ const UserSchema = new Schema({
   },
 });
 
-module.exports = model("User", UserSchema);
+module.exports = model("users", UserSchema);

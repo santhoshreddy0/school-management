@@ -6,16 +6,16 @@ const ClassUserMappingSchema = new Schema(
   {
     class_id: {
       type: Schema.Types.ObjectId,
-      ref: "Class",
+      ref: "classes",
       required: true,
     },
     user_id: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("ClassUserMapping", ClassUserMappingSchema);
+module.exports = model("classusermappings", ClassUserMappingSchema);

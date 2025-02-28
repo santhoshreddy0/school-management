@@ -15,10 +15,10 @@ const ClassSchema = new Schema(
     },
     created_by: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("Class", ClassSchema);
+module.exports = model("classes", ClassSchema);

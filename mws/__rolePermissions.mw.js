@@ -11,7 +11,6 @@ module.exports = ({ meta, config, mongomodels, managers }) => {
       });
     }
     const userId = req.decodedToken.userId;
-    console.log("userId", userId);
 
     let permissionDetails = await mongomodels.User.aggregate([
       {
@@ -46,7 +45,6 @@ module.exports = ({ meta, config, mongomodels, managers }) => {
         },
       },
     ]);
-    console.log("permissions", permissionDetails);
 
     const permissions = permissionDetails[0].permissions.map((permission) =>
       permission.toLowerCase()

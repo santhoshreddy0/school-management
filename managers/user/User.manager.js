@@ -1,5 +1,4 @@
-const bcrypt = require("bcrypt");
-const { is } = require("useragent");
+const { hashPassword } = require("../../libs/utils");
 
 module.exports = class User {
   constructor({ config, managers, validators, mongomodels } = {}) {
@@ -36,13 +35,12 @@ module.exports = class User {
       let defaultRole = await this.mongomodels.Role.findOne({
         name: "student",
       });
-      console.log("default role ", defaultRole);
 
       if (!defaultRole) {
         console.error("Unable to find the default role");
         throw new Error();
       }
-      const hashedPassword = await this.hashPassword(user.password);
+      const hashedPassword = await hashPassword(user.password);
 
       user = { ...user, password: hashedPassword, role: defaultRole._id };
 
@@ -85,7 +83,7 @@ module.exports = class User {
       // check for existing email
       const existingUser = await this.mongomodels.User.findOne({
         email,
-        isActive: true,
+        active: true,
       });
       if (!existingUser) {
         return {
@@ -170,11 +168,5 @@ module.exports = class User {
         code: 500,
       };
     }
-  }
-
-  async hashPassword(password) {
-    const saltRounds = 5; // The cost factor (higher = more secure but slower)
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    return hashedPassword;
   }
 };

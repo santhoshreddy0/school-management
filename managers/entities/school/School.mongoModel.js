@@ -19,11 +19,11 @@ const SchoolSchema = new Schema(
     },
     created_by: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       required: false,
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("School", SchoolSchema);
+module.exports = model("schools", SchoolSchema);
