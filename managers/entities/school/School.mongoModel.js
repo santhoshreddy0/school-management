@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
-const RoleSchema = new Schema(
+const SchoolSchema = new Schema(
   {
     name: {
       type: String,
@@ -13,8 +13,17 @@ const RoleSchema = new Schema(
       type: String,
       required: false,
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    created_by: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = model("Role", RoleSchema);
+module.exports = model("School", SchoolSchema);

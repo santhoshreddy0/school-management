@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const { Schema, model } = mongoose;
 
-const RoleSchema = new Schema(
+const ClassSchema = new Schema(
   {
     name: {
       type: String,
@@ -13,8 +13,12 @@ const RoleSchema = new Schema(
       type: String,
       required: false,
     },
+    created_by: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
 
-module.exports = model("Role", RoleSchema);
+module.exports = model("Class", ClassSchema);

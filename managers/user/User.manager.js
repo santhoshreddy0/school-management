@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const { is } = require("useragent");
 
 module.exports = class User {
   constructor({ config, managers, validators, mongomodels } = {}) {
@@ -82,7 +83,10 @@ module.exports = class User {
         };
 
       // check for existing email
-      const existingUser = await this.mongomodels.User.findOne({ email });
+      const existingUser = await this.mongomodels.User.findOne({
+        email,
+        isActive: true,
+      });
       if (!existingUser) {
         return {
           error: "User does not exist",
