@@ -27,6 +27,7 @@ module.exports = ({ meta, config, managers }) => {
         errors: "unauthorized",
       });
     }
+    req.decodedToken = decoded;
     next(decoded);
   };
 };

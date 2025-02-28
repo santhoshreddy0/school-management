@@ -129,7 +129,7 @@ module.exports = class User {
     }
   }
 
-  async updateProfile({ name, password, __shortToken }) {
+  async updateProfile({ name, password, __shortToken, __rolePermissions }) {
     try {
       // validate the user
       let user = { name, password };
