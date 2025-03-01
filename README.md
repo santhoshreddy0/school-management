@@ -68,6 +68,10 @@ node initial_setup/SampleData.js
 npm run dev
 ```
 
+   - generate long token from user/createUser or user/loginUser API
+   - genrate short token from  token/v1_createShortToken API ( attach long token in headers)
+   - attach short token to all API in headers
+
 The API will run on port **5111**.
 
 ### 9. Run Unit Tests
