@@ -55,6 +55,10 @@ SUPERADMIN_PASSWORD=<your_superadmin_password>
 Run the following command to populate the database with sample data:
 
 ```sh
+npm run dev
+```
+stop server  by `ctcl (^) + c `
+```
 node initial_setup/SampleData.js
 ```
 
@@ -71,7 +75,8 @@ The API will run on port **5111**.
 ```sh
 npm test
 ```
-
+**coverage report**
+![Unit test coverage ](/public/image.png)
 ### 10. Access API Documentation
 
 Open the following URL in your browser:
