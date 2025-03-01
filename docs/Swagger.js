@@ -1,7 +1,6 @@
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const config = require("../config/index.config");
-const globalResponses = require("./CommonResponses");
 
 const options = {
   definition: {
