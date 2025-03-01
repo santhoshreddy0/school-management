@@ -126,6 +126,24 @@
  *                 message:
  *                   type: string
  *                   example: "User does not exist"
+ *       '429':
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: object
+ *                 errors:
+ *                   type: string
+ *                   example: "Too many requests, please try again later."
+ *                 message:
+ *                   type: string
+ *                   example: ""
  *       '500':
  *         description: Server error
  *         content:
@@ -248,6 +266,24 @@
  *                 message:
  *                   type: string
  *                   example: ""
+ *       '429':
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: object
+ *                 errors:
+ *                   type: string
+ *                   example: "Too many requests, please try again later."
+ *                 message:
+ *                   type: string
+ *                   example: ""
  *       '500':
  *         description: Server error
  *         content:
@@ -362,6 +398,24 @@
  *                 message:
  *                   type: string
  *                   example: ""
+ *       '429':
+ *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: object
+ *                 errors:
+ *                   type: string
+ *                   example: "Too many requests, please try again later."
+ *                 message:
+ *                   type: string
+ *                   example: ""
  *       '500':
  *         description: Server error
  *         content:
@@ -375,5 +429,4 @@
  *                 error:
  *                   type: string
  *                   example: "Something went wrong!"
- *
  */

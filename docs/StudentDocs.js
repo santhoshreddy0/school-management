@@ -118,6 +118,42 @@
  *                 message:
  *                   type: string
  *                   example: "Already enrolled in the class"
+ *       '401':
+ *         description: Unauthorized (missing or invalid authentication token)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: object
+ *                 errors:
+ *                   type: string
+ *                   example: "unauthorized"
+ *                 message:
+ *                   type: string
+ *                   example: ""
+ *       '429':
+ *         description: Too Many Requests (rate limiting)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: object
+ *                 errors:
+ *                   type: string
+ *                   example: "Too many requests, please try again later."
+ *                 message:
+ *                   type: string
+ *                   example: ""
  *       '500':
  *         description: Server error
  *         content:
@@ -138,24 +174,6 @@
  *                 message:
  *                   type: string
  *                   example: "Something went wrong!"
- *       '401':
- *         description: Unauthorized (missing or invalid authentication token)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 ok:
- *                   type: boolean
- *                   example: false
- *                 data:
- *                   type: object
- *                 errors:
- *                   type: string
- *                   example: "unauthorized"
- *                 message:
- *                   type: string
- *                   example: ""
  *
  * /api/student/transfer:
  *   put:
@@ -277,6 +295,42 @@
  *                 message:
  *                   type: string
  *                   example: "Student is already enrolled in the new class"
+ *       '401':
+ *         description: Unauthorized (missing or invalid authentication token)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: object
+ *                 errors:
+ *                   type: string
+ *                   example: "unauthorized"
+ *                 message:
+ *                   type: string
+ *                   example: ""
+ *       '429':
+ *         description: Too Many Requests (rate limiting)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: object
+ *                 errors:
+ *                   type: string
+ *                   example: "Too many requests, please try again later."
+ *                 message:
+ *                   type: string
+ *                   example: ""
  *       '500':
  *         description: Server error
  *         content:
@@ -297,22 +351,4 @@
  *                 message:
  *                   type: string
  *                   example: "Something went wrong!"
- *       '401':
- *         description: Unauthorized (missing or invalid authentication token)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 ok:
- *                   type: boolean
- *                   example: false
- *                 data:
- *                   type: object
- *                 errors:
- *                   type: string
- *                   example: "unauthorized"
- *                 message:
- *                   type: string
- *                   example: ""
  */
