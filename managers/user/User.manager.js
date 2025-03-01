@@ -12,7 +12,7 @@ module.exports = class User {
     this.managers = managers;
   }
 
-  async createUser({ name, email, password, __rolePermissions }) {
+  async createUser({ name, email, password }) {
     try {
       // validate the user
       let user = { name, email, password };
