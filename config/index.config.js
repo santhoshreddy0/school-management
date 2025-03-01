@@ -27,6 +27,8 @@ const LONG_TOKEN_SECRET = process.env.LONG_TOKEN_SECRET || null;
 const SHORT_TOKEN_SECRET = process.env.SHORT_TOKEN_SECRET || null;
 const NACL_SECRET = process.env.NACL_SECRET || null;
 const DEFAULT_PAGE_LIMIT = 10;
+const SUPERADMIN_EMAIL = process.env.SUPERADMIN_EMAIL || "";
+const SUPERADMIN_PASSWORD = process.env.SUPERADMIN_PASSWORD || "";
 
 if (!LONG_TOKEN_SECRET || !SHORT_TOKEN_SECRET || !NACL_SECRET) {
   throw Error("missing .env variables check index.config");
@@ -49,6 +51,8 @@ config.dotEnv = {
   LONG_TOKEN_SECRET,
   SHORT_TOKEN_SECRET,
   DEFAULT_PAGE_LIMIT,
+  SUPERADMIN_EMAIL,
+  SUPERADMIN_PASSWORD,
 };
 
 module.exports = config;
