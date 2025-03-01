@@ -13,6 +13,7 @@ module.exports = class School {
       "post=createSchool",
       "put=updateSchool",
       "post=addAdmin",
+      "get=getSchools",
     ];
     this.managers = managers;
   }
@@ -209,6 +210,33 @@ module.exports = class School {
       }
       // create the admin
     } catch (error) {
+      return {
+        error: "Something went wrong",
+        code: 500,
+      };
+    }
+  }
+
+  async getSchools({ query, __shortToken, __rolePermissions }) {
+    try {
+      let { page, limit } = query;
+
+      page = parseInt(page) || 1;
+      limit = parseInt(limit) || 2;
+      const skip = (page - 1) * limit;
+
+      const schools = await this.mongomodels.School.find()
+        .skip(skip)
+        .limit(limit);
+      const total = await this.mongomodels.School.countDocuments();
+
+      return {
+        schools,
+        totalPages: Math.ceil(total / limit),
+        page,
+      };
+    } catch (error) {
+      console.error(error);
       return {
         error: "Something went wrong",
         code: 500,
