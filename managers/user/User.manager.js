@@ -1,4 +1,5 @@
 const { hashPassword } = require("../../libs/utils");
+const bcrypt = require("bcrypt");
 
 module.exports = class User {
   constructor({ config, managers, validators, mongomodels } = {}) {

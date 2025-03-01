@@ -12,7 +12,6 @@ module.exports = class Classroom {
       "post=createClassroom",
       "put=updateClassroom",
       "get=getClassrooms",
-      "post=addStudent",
     ];
     this.managers = managers;
   }
@@ -44,7 +43,7 @@ module.exports = class Classroom {
       // check for existing school
       const existingClassroom = await this.mongomodels.Classroom.findOne({
         name,
-        _id: schoolId,
+        school_id: schoolId,
       });
       if (existingClassroom) {
         return {
@@ -146,65 +145,6 @@ module.exports = class Classroom {
       };
     } catch (error) {
       console.error(error);
-      return {
-        error: "Something went wrong",
-        code: 500,
-      };
-    }
-  }
-  async addStudent({ classId, emai, __shortToken, __rolePermissions }) {
-    try {
-      // validate the admin
-      const studentDetails = {
-        classId,
-        email,
-      };
-
-      const result = await this.validators.Classroom.addStudent(studentDetails);
-      if (result) {
-        return {
-          errors: result,
-          code: 422,
-        };
-      }
-      const existingUser = await this.mongomodels.User.findOne({
-        email,
-      });
-      if (!existingUser) {
-        return {
-          error: "User does not exists",
-          code: 404,
-        };
-      }
-      let enrollmentDetails = {
-        class_id: classId,
-        user_id: existingUser._id,
-      };
-      let existingEnrollment = await this.mongomodels.ClassUserMapping.findOne({
-        class_id: classId,
-        user_id: existingUser._id,
-      });
-      if (existingEnrollment) {
-        return {
-          error: "Already enrolled to the class",
-          code: 409,
-        };
-      }
-      console.log(enrollmentDetails);
-
-      enrollmentDetails = await this.mongomodels.ClassUserMapping.insertOne(
-        enrollmentDetails
-      );
-      return {
-        enrollmentDetails: {
-          classId: enrollmentDetails.class_id,
-          email: studentDetails.email,
-          user_id: enrollmentDetails.user_id,
-        },
-      };
-      // create the admin
-    } catch (error) {
-      console.error("error", error);
       return {
         error: "Something went wrong",
         code: 500,
