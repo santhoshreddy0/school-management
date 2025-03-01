@@ -15,6 +15,7 @@ const TimeMachine = require("../managers/time_machine/TimeMachine.manager");
 const MongoLoader = require("./MongoLoader");
 const User = require("../managers/user/User.manager");
 const School = require("../managers/school/School.manager");
+const Classroom = require("../managers/classroom/Classroom.manager");
 
 /**
  * load sharable modules
@@ -68,6 +69,7 @@ module.exports = class ManagersLoader {
     this.managers.token = new TokenManager(this.injectable);
     this.managers.user = new User(this.injectable);
     this.managers.school = new School(this.injectable);
+    this.managers.classroom = new Classroom(this.injectable);
     /*************************************************************************************************/
     this.managers.mwsExec = new VirtualStack({
       ...{ preStack: [/* '__token', */ "__device"] },

@@ -7,18 +7,26 @@ const ClassSchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     description: {
       type: String,
       required: false,
     },
-    created_by: {
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    capacity: {
+      type: Number,
+      required: true,
+    },
+    school_id: {
       type: Schema.Types.ObjectId,
-      ref: "users",
+      ref: "schools",
+      required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("classes", ClassSchema);
+module.exports = model("classrooms", ClassSchema);

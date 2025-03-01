@@ -1,5 +1,4 @@
 const getParamNames = require("./_common/getParamNames");
-const { stringify } = require("flatted");
 /**
  * scans all managers for exposed methods
  * and makes them available through a handler middleware

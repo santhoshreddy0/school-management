@@ -85,6 +85,11 @@ module.exports = {
     type: "Number",
     length: { min: 1, max: 6 },
   },
+  capacity: {
+    type: "Number",
+    path: "capacity",
+    length: { min: 1, max: 50 },
+  },
   arrayOfStrings: {
     type: "Array",
     items: {

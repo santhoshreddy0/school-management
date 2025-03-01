@@ -17,11 +17,6 @@ const SchoolSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    created_by: {
-      type: Schema.Types.ObjectId,
-      ref: "users",
-      required: false,
-    },
   },
   { timestamps: true }
 );

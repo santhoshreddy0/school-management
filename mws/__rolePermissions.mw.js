@@ -46,7 +46,7 @@ module.exports = ({ meta, config, mongomodels, managers }) => {
       },
     ]);
 
-    const permissions = permissionDetails[0].permissions.map((permission) =>
+    const permissions = permissionDetails[0]?.permissions?.map((permission) =>
       permission.toLowerCase()
     );
 
@@ -55,7 +55,7 @@ module.exports = ({ meta, config, mongomodels, managers }) => {
       ":" +
       req.params?.fnName?.toLowerCase();
 
-    if (!permissions.includes(routeIdentifier)) {
+    if (!permissions || !permissions.includes(routeIdentifier)) {
       return managers.responseDispatcher.dispatch(res, {
         ok: false,
         code: 401,

@@ -222,7 +222,7 @@ module.exports = class School {
       let { page, limit } = query;
 
       page = parseInt(page) || 1;
-      limit = parseInt(limit) || 2;
+      limit = parseInt(limit) || this.config.dotEnv.DEFAULT_PAGE_LIMIT;
       const skip = (page - 1) * limit;
 
       const schools = await this.mongomodels.School.find()
