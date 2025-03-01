@@ -89,7 +89,15 @@ The database schema consists of multiple collections:
 2. **User**: Stores user information with roles.
 3. **Classroom**: Represents classes in a school.
 4. **Role & Permission**: Defines roles and permissions for users.
-5. **Mappings**:
+5. **Cardinality**:
+   - role : permission ==> M : M ( needs separate mapping table)
+   - user: role ==> M : 1 ( user table will have the role id )
+   - school : class ==> 1 : M ( class table will have school id)
+   - class : user ==> M : M ( needs mapping table for class & user)
+     - assuming user can opt for multiple classes
+   - school : user ( admin) ==> M : M ( needs mapping table)
+     -  assuming one admin can manage multiple school but this can be restricted through bussiness logic
+6. **Mappings**:
    - `school_admin_mapping`: Links users as admins of a school.
    - `class_user_mapping`: Links users to classrooms.
    - `role_permission_mapping`: Defines permissions assigned to roles.
@@ -112,6 +120,19 @@ Database documenatation : [click to open docs](https://dbdocs.io/santhoshfrnds49
 
 
    ![Database Schema](/public/School%20Management.png)
+
+### Role-Based Access Control (RBAC) in API Implementation
+ **Middleware for Permission Checking**
+The middleware intercepts API requests, extracts user permissions from the token or a database, and checks if the user is authorized to access the requested route.
+
+Steps in Middleware:
+- Extract the authentication token from the request header.
+- Decode the token to retrieve user details (roles/permissions).
+- Fetch additional permissions from a database if required.
+- Verify if the user has access to the requested route.
+  - for verifying the access : api route is used for mapping with permissions like `classroom:createClassroom`
+  - these permissions are mapped with roles so that dynamic updates are possible for roles
+- Deny access if the user lacks the required permissions.
 
 ## Deployment Steps
 
