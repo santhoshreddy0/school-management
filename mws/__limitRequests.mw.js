@@ -20,7 +20,6 @@ module.exports = ({ meta, config, managers, cache }) => {
       if (currentRequests === 1) {
         await redisClient.pexpire(key, windowMs); // Set expiration if first request
       }
-      console.log(managers);
 
       if (currentRequests > maxRequests) {
         return managers.responseDispatcher.dispatch(res, {

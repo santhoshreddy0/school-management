@@ -8,7 +8,7 @@ module.exports = class User {
     this.mongomodels = mongomodels;
     this.tokenManager = managers.token;
     this.usersCollection = "users";
-    this.httpExposed = ["post=createUser", "loginUser", "updateProfile"];
+    this.httpExposed = ["post=createUser", "loginUser", "put=updateProfile"];
     this.managers = managers;
   }
 
