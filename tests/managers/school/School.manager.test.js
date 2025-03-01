@@ -59,6 +59,66 @@ describe("School class", () => {
     });
   });
 
+  test("should return validation error for missing name in createSchool", async () => {
+    mockValidators.school.createSchool.mockResolvedValue(["Name is required"]);
+    const result = await school.createSchool({
+      name: "",
+      desc: "Test desc",
+    });
+    expect(result).toEqual({ errors: ["Name is required"], code: 422 });
+  });
+
+  test("should return 500 error for unexpected exception in createSchool", async () => {
+    mockValidators.school.createSchool.mockRejectedValue(
+      new Error("Unexpected error")
+    );
+    const result = await school.createSchool({
+      name: "Test School",
+      desc: "Test Description",
+    });
+    expect(result).toEqual({ error: "Something went wrong", code: 500 });
+  });
+
+  test("should return error if admin email already exists in addAdmin", async () => {
+    mockValidators.school.addAdmin.mockResolvedValue(null);
+    mockMongomodels.School.findOne.mockResolvedValue({ _id: "1" });
+    mockMongomodels.User.findOne.mockResolvedValue({
+      email: "admin@example.com",
+    });
+    const result = await school.addAdmin({
+      schoolId: "1",
+      name: "Admin",
+      email: "admin@example.com",
+      password: "password",
+    });
+    expect(result).toEqual({
+      error: "user already exists with this email use another email",
+      code: 422,
+    });
+  });
+
+  test("should return error if school does not exist in addAdmin", async () => {
+    mockValidators.school.addAdmin.mockResolvedValue(null);
+    mockMongomodels.School.findOne.mockResolvedValue(null);
+    const result = await school.addAdmin({
+      schoolId: "1",
+      name: "Admin",
+      email: "admin@example.com",
+      password: "password",
+    });
+    expect(result).toEqual({ error: "School does not exist", code: 422 });
+  });
+
+  test("should return validation error for missing email in addAdmin", async () => {
+    mockValidators.school.addAdmin.mockResolvedValue(["Email is required"]);
+    const result = await school.addAdmin({
+      schoolId: "1",
+      name: "Admin",
+      password: "password",
+    });
+    expect(result).toEqual({ errors: ["Email is required"], code: 422 });
+  });
+
   test("createSchool - successful creation", async () => {
     const result = await school.createSchool({
       name: "Test School",
