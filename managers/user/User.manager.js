@@ -55,7 +55,7 @@ module.exports = class User {
       // Response
       return {
         user: {
-          name: createdUser.User,
+          name: createdUser.name,
           email: createdUser.email,
         },
         longToken,
@@ -151,7 +151,7 @@ module.exports = class User {
       }
       existingUser.name = name || existingUser.name;
       let hashedPassword = password
-        ? await this.hashPassword(password)
+        ? await hashPassword(password)
         : existingUser.password;
       existingUser.password = hashedPassword;
       const updatedUser = await existingUser.save();
