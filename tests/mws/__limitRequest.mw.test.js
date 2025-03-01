@@ -1,18 +1,11 @@
-const rateLimiterMiddleware = require("../../mws/__limitRequests.mw");
 const useragent = require("useragent");
 const requestIp = require("request-ip");
-
-jest.mock("useragent");
-jest.mock("request-ip");
+const middleware = require("../../mws/__limitRequests.mw");
 
 describe("Rate Limiter Middleware", () => {
-  let req, res, next, cache, managers;
+  let rateLimiter, req, res, next, cache, mockManagers;
 
   beforeEach(() => {
-    req = { headers: { "user-agent": "Mozilla/5.0" } };
-    res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-    next = jest.fn();
-
     cache = {
       client: {
         incr: jest.fn(),
@@ -20,44 +13,72 @@ describe("Rate Limiter Middleware", () => {
       },
     };
 
-    managers = {
+    mockManagers = {
       responseDispatcher: {
         dispatch: jest.fn(),
       },
     };
-  });
 
-  test("should allow request when within rate limit", async () => {
-    requestIp.getClientIp.mockReturnValue("192.168.1.1");
-    useragent.lookup.mockReturnValue("TestAgent");
-    cache.client.incr.mockResolvedValue(10);
-
-    const middleware = rateLimiterMiddleware({
+    rateLimiter = middleware({
       meta: {},
       config: {},
-      managers,
+      managers: mockManagers,
       cache,
     });
-    await middleware({ req, res, next });
 
-    expect(cache.client.incr).toHaveBeenCalled();
+    req = {
+      headers: { "user-agent": "Mozilla/5.0" },
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    next = jest.fn();
+
+    jest.spyOn(requestIp, "getClientIp").mockReturnValue("192.168.1.1");
+    jest
+      .spyOn(useragent, "lookup")
+      .mockReturnValue({ toString: () => "Chrome" });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test("should allow request when below rate limit", async () => {
+    cache.client.incr.mockResolvedValue(50);
+
+    await rateLimiter({ req, res, next });
+
+    expect(requestIp.getClientIp).toHaveBeenCalledWith(req);
+    expect(useragent.lookup).toHaveBeenCalledWith(req.headers["user-agent"]);
+    expect(cache.client.incr).toHaveBeenCalledWith(
+      "rate_limit:192.168.1.1Chrome"
+    );
     expect(next).toHaveBeenCalled();
   });
 
-  test("should block request when exceeding rate limit", async () => {
-    requestIp.getClientIp.mockReturnValue("192.168.1.1");
-    useragent.lookup.mockReturnValue("TestAgent");
-    cache.client.incr.mockResolvedValue(101);
+  test("should set expiration on first request", async () => {
+    cache.client.incr.mockResolvedValue(1);
+    cache.client.pexpire.mockResolvedValue();
 
-    const middleware = rateLimiterMiddleware({
-      meta: {},
-      config: {},
-      managers,
-      cache,
-    });
-    await middleware({ req, res, next });
+    await rateLimiter({ req, res, next });
 
-    expect(managers.responseDispatcher.dispatch).toHaveBeenCalledWith(res, {
+    expect(cache.client.pexpire).toHaveBeenCalledWith(
+      "rate_limit:192.168.1.1Chrome",
+      10 * 60 * 1000
+    );
+    expect(next).toHaveBeenCalled();
+  });
+
+  test("should return 429 when rate limit is exceeded", async () => {
+    cache.client.incr.mockResolvedValue(201);
+
+    await rateLimiter({ req, res, next });
+
+    expect(mockManagers.responseDispatcher.dispatch).toHaveBeenCalledWith(res, {
       ok: false,
       code: 429,
       errors: "Too many requests, please try again later.",
@@ -65,43 +86,16 @@ describe("Rate Limiter Middleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  test("should handle Redis errors gracefully", async () => {
-    requestIp.getClientIp.mockReturnValue("192.168.1.1");
-    useragent.lookup.mockReturnValue("TestAgent");
+  test("should return 500 when Redis throws an error", async () => {
     cache.client.incr.mockRejectedValue(new Error("Redis error"));
 
-    const middleware = rateLimiterMiddleware({
-      meta: {},
-      config: {},
-      managers,
-      cache,
-    });
-    await middleware({ req, res, next });
-
-    expect(managers.responseDispatcher.dispatch).toHaveBeenCalledWith(res, {
+    await rateLimiter({ req, res, next });
+    expect(mockManagers.responseDispatcher.dispatch).toHaveBeenCalledWith(res, {
       ok: false,
       code: 500,
       errors: "Something went wrong",
     });
+
     expect(next).not.toHaveBeenCalled();
-  });
-
-  test("should set expiration for new request key", async () => {
-    requestIp.getClientIp.mockReturnValue("192.168.1.1");
-    useragent.lookup.mockReturnValue("TestAgent");
-    cache.client.incr.mockResolvedValue(1);
-
-    const middleware = rateLimiterMiddleware({
-      meta: {},
-      config: {},
-      managers,
-      cache,
-    });
-    await middleware({ req, res, next });
-
-    expect(cache.client.pexpire).toHaveBeenCalledWith(
-      expect.any(String),
-      10 * 60 * 1000
-    );
   });
 });
