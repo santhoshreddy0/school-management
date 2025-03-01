@@ -57,7 +57,7 @@ module.exports = class ApiHandler {
 
           params.forEach((param) => {
             if (!this.mwsStack[`${mk}.${fnName}`]) {
-              this.mwsStack[`${mk}.${fnName}`] = [];
+              this.mwsStack[`${mk}.${fnName}`] = ["__limitRequests"]; // rate limiter is default
             }
             if (param.startsWith("__")) {
               // this is a middleware identifier
