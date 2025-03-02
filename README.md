@@ -21,13 +21,7 @@ cd school-management
 Ensure you have Node.js version 16 or later installed.
 
 ### 4. Install npm
-
-If npm is not installed, install it using:
-
-```sh
-npm install -g npm
-```
-
+https://nodejs.org/en/download 
 ### 5. Install Dependencies
 
 Run the following command to install all required packages:
